@@ -3,8 +3,8 @@ package main
 import (
 	_ "embed"
 	"fmt"
-	"sort"
-	"strconv"
+	"internal/utils"
+	"slices"
 	"strings"
 )
 
@@ -14,12 +14,8 @@ var input string
 func partOne(left []int, right []int) int {
 	var sum int
 	for i := range left {
-		diff := left[i] - right[i]
-		if diff < 0 {
-			sum -= diff
-		} else {
-			sum += diff
-		}
+		diff, _ := utils.AbsInt(left[i] - right[i])
+		sum += diff
 	}
 	return sum
 }
@@ -48,18 +44,15 @@ func partTwo(left []int, right []int) int {
 func main() {
 	var left, right []int
 	for idx, strNum := range strings.Fields(input) {
-		number, err := strconv.Atoi(strNum)
-		if err != nil {
-			panic(err)
-		}
+		number := utils.StrToInt(strNum)
 		if idx%2 == 0 {
 			left = append(left, number)
 		} else {
 			right = append(right, number)
 		}
 	}
-	sort.Ints(left)
-	sort.Ints(right)
+	slices.Sort(left)
+	slices.Sort(right)
 
 	fmt.Println("Part 1: ", partOne(left, right))
 	fmt.Println("Part 2: ", partTwo(left, right))
