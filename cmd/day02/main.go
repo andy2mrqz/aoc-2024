@@ -10,27 +10,6 @@ import (
 //go:embed input.txt
 var input string
 
-func partOne(reports [][]int) int {
-	numSafe := 0
-	for _, levels := range reports {
-		prev := levels[0]
-		isSafe := false
-		_, currSign := utils.AbsInt(levels[1] - prev)
-		for _, level := range levels[1:] {
-			change, sign := utils.AbsInt(level - prev)
-			isSafe = sign == currSign && sign != 0 && change >= 1 && change <= 3
-			if !isSafe {
-				break
-			}
-			prev = level
-		}
-		if isSafe {
-			numSafe += 1
-		}
-	}
-	return numSafe
-}
-
 func _getDomSign(ins []int) int {
 	sumSigns := 0
 	for i, item := range ins[1:] {
@@ -41,41 +20,52 @@ func _getDomSign(ins []int) int {
 	return domSign
 }
 
-func peek(levels []int, i int) (int, bool) {
-	if i < len(levels) {
-		return levels[i], true
-	} else {
-		return 0, false
+func isValidReport(report []int) bool {
+	prev := report[0]
+	domSign := _getDomSign(report)
+	for _, curr := range report[1:] {
+		change, sign := utils.AbsInt(curr - prev)
+		isValid := sign == domSign && change >= 1 && change <= 3
+		prev = curr
+		if !isValid {
+			return isValid
+		}
 	}
+	return true
 }
 
-func isValidStep(prev int, curr int, domSign int) bool {
-	change, sign := utils.AbsInt(curr - prev)
-	return sign == domSign && change >= 1 && change <= 3
+func partOne(reports [][]int) int {
+	numSafe := 0
+	for _, report := range reports {
+		if isValidReport(report) {
+			numSafe += 1
+		}
+	}
+	return numSafe
+}
+
+func sliceExclude(s []int, idx int) []int {
+	ret := make([]int, 0)
+	ret = append(ret, s[:idx]...)
+	return append(ret, s[idx+1:]...)
+}
+
+func isValidPartTwo(report []int) bool {
+	if isValidReport(report) {
+		return true
+	}
+	for idx := range report {
+		if isValidReport(sliceExclude(report, idx)) {
+			return true
+		}
+	}
+	return false
 }
 
 func partTwo(reports [][]int) int {
 	numSafe := 0
-	for _, levels := range reports {
-		prev := levels[0]
-		numUnsafe := 0
-		domSign := _getDomSign(levels)
-		for idx, curr := range levels[1:] {
-			isValid := isValidStep(prev, curr, domSign)
-			if isValid {
-				prev = curr
-				continue
-			}
-			numUnsafe += 1
-			next, ok := peek(levels, idx+2)
-			if ok {
-				nextValid := isValidStep(curr, next, domSign)
-				if nextValid {
-					prev = curr
-				}
-			}
-		}
-		if numUnsafe <= 1 {
+	for _, report := range reports {
+		if isValidPartTwo(report) {
 			numSafe += 1
 		}
 	}
