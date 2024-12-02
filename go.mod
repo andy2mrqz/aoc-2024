@@ -1,3 +1,6 @@
 module aoc
 
-go 1.23.2
+go 1.23.3
+
+require internal/utils v1.0.0
+replace internal/utils => ./internal/utils
