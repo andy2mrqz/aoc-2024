@@ -22,20 +22,15 @@ func partOne(i string) int {
 	return sum
 }
 
-func isActive(s string, curr bool) bool {
-	if strings.HasPrefix(s, "do") { // captures do() and don't()
-		return s == "do()"
-	}
-	return curr
-}
-
 func partTwo(i string) int {
 	doRe := regexp.MustCompile(`do\(\)|don't\(\)|mul\((\d+),(\d+)\)`)
 	insts := doRe.FindAllStringSubmatch(i, -1)
 	active := true
 	sum := 0
 	for _, inst := range insts {
-		active = isActive(inst[0], active)
+		if strings.HasPrefix(inst[0], "do") {
+			active = inst[0] == "do()" // update active according to do() or don't()
+		}
 		if active && strings.HasPrefix(inst[0], "mul") {
 			l, r := utils.StrToInt(inst[1]), utils.StrToInt(inst[2])
 			sum += l * r
