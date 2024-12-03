@@ -16,8 +16,7 @@ func partOne(i string) int {
 	mults := re.FindAllStringSubmatch(i, -1)
 	sum := 0
 	for _, mult := range mults {
-		l, r := utils.StrToInt(mult[1]), utils.StrToInt(mult[2])
-		sum += l * r
+		sum += utils.StrToInt(mult[1]) * utils.StrToInt(mult[2])
 	}
 	return sum
 }
@@ -30,10 +29,8 @@ func partTwo(i string) int {
 	for _, inst := range insts {
 		if strings.HasPrefix(inst[0], "do") {
 			active = inst[0] == "do()" // update active according to do() or don't()
-		}
-		if active && strings.HasPrefix(inst[0], "mul") {
-			l, r := utils.StrToInt(inst[1]), utils.StrToInt(inst[2])
-			sum += l * r
+		} else if active && strings.HasPrefix(inst[0], "mul") {
+			sum += utils.StrToInt(inst[1]) * utils.StrToInt(inst[2])
 		}
 	}
 	return sum
