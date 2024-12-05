@@ -5,38 +5,43 @@ import (
 	"aoc/internal/utils"
 	_ "embed"
 	"fmt"
+	"slices"
 	"strings"
 )
 
 //go:embed input.txt
 var input string
 
-func partOne(beforeMap Rulebook, afterMap Rulebook, updates [][]int) int {
-	sum := 0
+func handleRules(beforeSet Rulebook, afterSet Rulebook, updates [][]int) (int, int) {
+	part1Sum, part2Sum := 0, 0
 	for _, update := range updates {
 		isValid := true
+		seen := make(set.Set[int])
 		shouldNotSeeAgain := make(set.Set[int])
-		for _, pageNumber := range update {
+		for currIdx, pageNumber := range update {
 			if shouldNotSeeAgain.Has(pageNumber) {
+				intersection := beforeSet[pageNumber].Intersection(seen)
+				lowestIdx := len(update)
+				for _, x := range intersection.Slice() {
+					xIdx := slices.Index(update, x)
+					lowestIdx = min(xIdx, lowestIdx)
+				}
+				update = slices.Delete(update, currIdx, currIdx+1)
+				update = slices.Insert(update, lowestIdx, pageNumber)
 				isValid = false
-				break
 			}
-			// beforeRules := beforeMap[pageNumber] // n must be before x|y|z
-			if afterRules, found := afterMap[pageNumber]; found {
-				shouldNotSeeAgain.Add(afterRules.Slice()...)
-			}
+			afterRules := afterSet[pageNumber]
+			shouldNotSeeAgain.Add(afterRules.Slice()...)
+			seen.Add(pageNumber)
 		}
+		middleIdx := len(update) / 2
 		if isValid {
-			middleIdx := len(update) / 2
-			sum += update[middleIdx]
+			part1Sum += update[middleIdx]
+		} else {
+			part2Sum += update[middleIdx]
 		}
 	}
-	return sum
-}
-
-func partTwo() int {
-	sum := 0
-	return sum
+	return part1Sum, part2Sum
 }
 
 type Rulebook map[int]set.Set[int]
@@ -66,6 +71,7 @@ func processInput(i string) (Rulebook, Rulebook, [][]int) {
 
 func main() {
 	beforeSet, afterSet, instructions := processInput(input)
-	fmt.Println("Part 1: ", partOne(beforeSet, afterSet, instructions))
-	fmt.Println("Part 2: ", partTwo())
+	part1, part2 := handleRules(beforeSet, afterSet, instructions)
+	fmt.Println("Part 1: ", part1)
+	fmt.Println("Part 2: ", part2)
 }
