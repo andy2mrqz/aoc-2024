@@ -8,6 +8,8 @@ language I'm interested in or may be using soon.
 | [Historian Hysteria](https://adventofcode.com/2024/day/1)  | [Day 1](./cmd/day01/main.go) | ⭐     | ⭐     |
 | [Rock Paper Scissors](https://adventofcode.com/2024/day/2) | [Day 2](./cmd/day02/main.go) | ⭐     | ⭐     |
 | [Mull It Over](https://adventofcode.com/2024/day/3)        | [Day 3](./cmd/day03/main.go) | ⭐     | ⭐     |
+| [Ceres Search](https://adventofcode.com/2024/day/4)        | [Day 4](./cmd/day04/main.go) | ⭐     | ⭐     |
+| [Print Queue](https://adventofcode.com/2024/day/5)         | [Day 5](./cmd/day05/main.go) | ⭐     | ⭐     |
 
 ## ⭐ Running the code
 
