@@ -2,5 +2,4 @@ module aoc
 
 go 1.23.3
 
-require internal/utils v1.0.0
-replace internal/utils => ./internal/utils
+require golang.org/x/exp v0.0.0-20241204233417-43b7b7cde48d

@@ -1,9 +1,9 @@
 package main
 
 import (
+	"aoc/internal/utils"
 	_ "embed"
 	"fmt"
-	"internal/utils"
 	"regexp"
 	"strings"
 )
