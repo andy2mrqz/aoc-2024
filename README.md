@@ -10,6 +10,7 @@ language I'm interested in or may be using soon.
 | [Mull It Over](https://adventofcode.com/2024/day/3)        | [Day 3](./cmd/day03/main.go) | ⭐     | ⭐     |
 | [Ceres Search](https://adventofcode.com/2024/day/4)        | [Day 4](./cmd/day04/main.go) | ⭐     | ⭐     |
 | [Print Queue](https://adventofcode.com/2024/day/5)         | [Day 5](./cmd/day05/main.go) | ⭐     | ⭐     |
+| [Guard Gallivant](https://adventofcode.com/2024/day/6)     | [Day 6](./cmd/day06/main.go) | ⭐     | ⭐     |
 
 ## ⭐ Running the code
 
