@@ -16,6 +16,12 @@ func (s Set[T]) Add(items ...T) {
 	}
 }
 
+func (s Set[T]) Remove(items ...T) {
+	for _, item := range items {
+		delete(s, item)
+	}
+}
+
 func (s Set[T]) Has(item T) bool {
 	_, ok := s[item]
 	return ok

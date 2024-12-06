@@ -27,11 +27,11 @@ func rotateDir(p grid.Point) grid.Point {
 	return nextMap[p]
 }
 
-func partOne(myGrid grid.Grid, startPoint grid.Point) (int, bool) { // (#positions, cycle?)
+func partOne(myGrid grid.Grid, startPoint grid.Point) (numPositions int, isCycle bool, seen set.Set[grid.Point]) {
 	currPoint, currDir := startPoint, Up
-	seen := set.New(currPoint)
-	isCycle := true
-	for i := 0; i < len(myGrid)^2; i++ {
+	seen = set.New(currPoint)
+	isCycle = true
+	for i := 0; i < len(myGrid); i++ {
 		nextPoint, nextChar := myGrid.Next(currPoint, currDir)
 		if nextChar == "" {
 			isCycle = false
@@ -43,19 +43,19 @@ func partOne(myGrid grid.Grid, startPoint grid.Point) (int, bool) { // (#positio
 		}
 		seen.Add(currPoint)
 	}
-	return len(seen), isCycle
+	return len(seen), isCycle, seen
 }
 
-func partTwo(myGrid grid.Grid, startPoint grid.Point) int {
+func partTwo(myGrid grid.Grid, startPoint grid.Point, seen set.Set[grid.Point]) int {
 	numCycles := 0
-	for point, char := range myGrid {
-		if char != "#" && char != "^" {
-			myGrid[point] = "#" // test adding a boundary
-			if _, isCycle := partOne(myGrid, startPoint); isCycle {
-				numCycles += 1
-			}
-			myGrid[point] = char // reset to original char
+	seen.Remove(startPoint) // can't add an obstacle to the starting point
+	for point := range seen {
+		char := myGrid[point]
+		myGrid[point] = "#" // test adding a boundary
+		if _, isCycle, _ := partOne(myGrid, startPoint); isCycle {
+			numCycles += 1
 		}
+		myGrid[point] = char // reset to original char
 	}
 	return numCycles
 }
@@ -63,7 +63,7 @@ func partTwo(myGrid grid.Grid, startPoint grid.Point) int {
 func main() {
 	myGrid := grid.New(input)
 	startPoint, _ := myGrid.FindNext("^")
-	numPositions, _ := partOne(myGrid, *startPoint)
+	numPositions, _, seen := partOne(myGrid, *startPoint)
 	fmt.Println("Part 1: ", numPositions)
-	fmt.Println("Part 2: ", partTwo(myGrid, *startPoint))
+	fmt.Println("Part 2: ", partTwo(myGrid, *startPoint, seen))
 }
