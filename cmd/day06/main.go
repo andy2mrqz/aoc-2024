@@ -27,13 +27,14 @@ func rotateDir(p grid.Point) grid.Point {
 	return nextMap[p]
 }
 
-func partOne(myGrid grid.Grid, startPoint grid.Point) int {
-	currPoint := startPoint
-	currDir := Up
+func partOne(myGrid grid.Grid, startPoint grid.Point) (int, bool) { // (#positions, cycle?)
+	currPoint, currDir := startPoint, Up
 	seen := set.New(currPoint)
-	for {
+	isCycle := true
+	for i := 0; i < len(myGrid)^2; i++ {
 		nextPoint, nextChar := myGrid.Next(currPoint, currDir)
 		if nextChar == "" {
+			isCycle = false
 			break // guard has left the map!
 		} else if nextChar == "#" {
 			currDir = rotateDir(currDir)
@@ -42,16 +43,27 @@ func partOne(myGrid grid.Grid, startPoint grid.Point) int {
 		}
 		seen.Add(currPoint)
 	}
-	return len(seen)
+	return len(seen), isCycle
 }
 
-func partTwo() int {
-	return 0
+func partTwo(myGrid grid.Grid, startPoint grid.Point) int {
+	numCycles := 0
+	for point, char := range myGrid {
+		if char != "#" && char != "^" {
+			myGrid[point] = "#" // test adding a boundary
+			if _, isCycle := partOne(myGrid, startPoint); isCycle {
+				numCycles += 1
+			}
+			myGrid[point] = char // reset to original char
+		}
+	}
+	return numCycles
 }
 
 func main() {
 	myGrid := grid.New(input)
 	startPoint, _ := myGrid.FindNext("^")
-	fmt.Println("Part 1: ", partOne(myGrid, *startPoint))
-	fmt.Println("Part 2: ", partTwo())
+	numPositions, _ := partOne(myGrid, *startPoint)
+	fmt.Println("Part 1: ", numPositions)
+	fmt.Println("Part 2: ", partTwo(myGrid, *startPoint))
 }
