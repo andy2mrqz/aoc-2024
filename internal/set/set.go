@@ -1,8 +1,14 @@
 package set
 
-import "golang.org/x/exp/constraints"
+type Set[T comparable] map[T]bool
 
-type Set[T constraints.Ordered] map[T]bool
+func New[T comparable](items ...T) Set[T] {
+	s := make(Set[T])
+	for _, item := range items {
+		s.Add(item)
+	}
+	return s
+}
 
 func (s Set[T]) Add(items ...T) {
 	for _, item := range items {
