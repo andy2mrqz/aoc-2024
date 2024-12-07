@@ -4,6 +4,7 @@ import (
 	"aoc/internal/utils"
 	_ "embed"
 	"fmt"
+	"strconv"
 	"strings"
 )
 
@@ -13,8 +14,9 @@ var input string
 type Operator func(a, b int) int
 
 var (
-	Add Operator = func(a, b int) int { return a + b }
-	Mul Operator = func(a, b int) int { return a * b }
+	Add    Operator = func(a, b int) int { return a + b }
+	Mul    Operator = func(a, b int) int { return a * b }
+	Concat Operator = func(a, b int) int { return utils.StrToInt(strconv.Itoa(a) + strconv.Itoa(b)) }
 )
 
 type Equation struct {
@@ -42,9 +44,6 @@ func product(n, repeat int) [][]int {
 func (e Equation) solveEquation(operators []Operator) (total int, ok bool) {
 	goal, nums := e.TestValue, e.Numbers
 	cs := product(len(operators), len(nums)-1)
-	if goal == 3267 {
-		fmt.Println("hi")
-	}
 	for _, c := range cs {
 		a := nums[0]
 		total := 0
@@ -63,19 +62,14 @@ func (e Equation) solveEquation(operators []Operator) (total int, ok bool) {
 	return 0, false
 }
 
-func partOne(equations []Equation) int {
+func solve(equations []Equation, operators []Operator) int {
 	sum := 0
-	operators := []Operator{Add, Mul}
 	for _, equation := range equations {
 		if total, ok := equation.solveEquation(operators); ok {
 			sum += total
 		}
 	}
 	return sum
-}
-
-func partTwo() int {
-	return 0
 }
 
 func processInput(i string) []Equation {
@@ -94,6 +88,8 @@ func processInput(i string) []Equation {
 
 func main() {
 	equations := processInput(input)
-	fmt.Println("Part 1: ", partOne(equations))
-	fmt.Println("Part 2: ", partTwo())
+	part1Operators := []Operator{Add, Mul}
+	part2Operators := []Operator{Add, Mul, Concat}
+	fmt.Println("Part 1: ", solve(equations, part1Operators))
+	fmt.Println("Part 2: ", solve(equations, part2Operators))
 }
