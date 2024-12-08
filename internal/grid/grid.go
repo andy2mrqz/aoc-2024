@@ -1,6 +1,8 @@
 package grid
 
-import "strings"
+import (
+	"strings"
+)
 
 type Grid map[Point]string
 type Point struct{ X, Y int }
@@ -39,15 +41,12 @@ func (g Grid) FindNext(searchChar string) (*Point, bool) {
 	return nil, false
 }
 
-func (g Grid) AllInstances(searchChars ...string) [][]Point {
-	pointsByChar := make([][]Point, len(searchChars))
-	for idx := range searchChars {
-		pointsByChar[idx] = []Point{}
-	}
+func (g Grid) AllInstances(searchChars ...string) map[string][]Point {
+	pointsByChar := make(map[string][]Point)
 	for gridPoint, gridChar := range g {
-		for idx, searchChar := range searchChars {
+		for _, searchChar := range searchChars {
 			if gridChar == searchChar {
-				pointsByChar[idx] = append(pointsByChar[idx], gridPoint)
+				pointsByChar[searchChar] = append(pointsByChar[searchChar], gridPoint)
 			}
 		}
 	}

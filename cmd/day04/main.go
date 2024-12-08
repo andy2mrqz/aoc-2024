@@ -46,7 +46,7 @@ func partTwo(myGrid grid.Grid, aPoints []grid.Point) int {
 func main() {
 	myGrid := grid.New(input)
 	instances := myGrid.AllInstances("X", "A")
-	charPoints1, charPoints2 := instances[0], instances[1]
-	fmt.Println("Part 1: ", partOne(myGrid, charPoints1))
-	fmt.Println("Part 2: ", partTwo(myGrid, charPoints2))
+	xPoints, aPoints := instances["X"], instances["A"]
+	fmt.Println("Part 1: ", partOne(myGrid, xPoints))
+	fmt.Println("Part 2: ", partTwo(myGrid, aPoints))
 }
