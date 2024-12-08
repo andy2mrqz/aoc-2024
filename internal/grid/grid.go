@@ -4,8 +4,13 @@ import (
 	"strings"
 )
 
-type Grid map[Point]string
 type Point struct{ X, Y int }
+
+func (a Point) Eq(b Point) bool {
+	return a.X == b.X && a.Y == b.Y
+}
+
+type Grid map[Point]string
 
 func New(i string) Grid {
 	grid := Grid{}
