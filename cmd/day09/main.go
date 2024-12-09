@@ -6,54 +6,46 @@ import (
 	"slices"
 )
 
-//go:embed input_test.txt
+//go:embed input.txt
 var input string
 
 const empty = -1
 
-// 0 [0]
-// 1 [. .]
-// 2 [1 1 1]
-// 3 [. . . .]
-// 4 [2 2 2 2 2]
-
-// [0 2 2 1 1 1 2 2 2]
-
-func partOne(fileBlocks [][]int) int {
-	// res := []int{}
-	for leftSliceIdx, rightSliceIdx := 1, len(fileBlocks)-1; leftSliceIdx < rightSliceIdx; {
-		leftSlice, rightSlice := fileBlocks[leftSliceIdx], fileBlocks[rightSliceIdx]
-		for i, rightVal := range slices.Backward(rightSlice) {
-			if rightVal == empty {
-				continue
-			}
-			for j, leftVal := range leftSlice {
-				if leftVal != empty {
-					continue
-				}
-				fileBlocks[leftSliceIdx][j] = rightVal
-				fileBlocks[rightSliceIdx][i] = empty
-				break
-			}
+func partOne(fileBlocks []int) int {
+	for leftIdx, rightIdx := 0, len(fileBlocks)-1; leftIdx < rightIdx; {
+		if fileBlocks[leftIdx] != empty {
+			leftIdx += 1
+			continue
 		}
-		leftSliceIdx += 1
-		rightSliceIdx -= 1
+		if fileBlocks[rightIdx] == empty {
+			rightIdx -= 1
+			continue
+		}
+		fileBlocks[leftIdx] = fileBlocks[rightIdx]
+		fileBlocks[rightIdx] = empty
+		leftIdx, rightIdx = leftIdx+1, rightIdx-1
 	}
-	fmt.Println(fileBlocks)
-	return 0
+	sum := 0
+	for i, val := range fileBlocks {
+		if val == empty {
+			break
+		}
+		sum += i * val
+	}
+	return sum
 }
 
 func partTwo() int {
 	return 0
 }
 
-func parseInputToBlocks(i string) [][]int {
-	res := [][]int{}
+func parseInputToBlocks(i string) []int {
+	res := []int{}
 	for idx, char := range i {
 		if idx%2 == 0 {
-			res = append(res, slices.Repeat([]int{idx / 2}, int(char-'0')))
+			res = append(res, slices.Repeat([]int{idx / 2}, int(char-'0'))...)
 		} else {
-			res = append(res, slices.Repeat([]int{empty}, int(char-'0')))
+			res = append(res, slices.Repeat([]int{empty}, int(char-'0'))...)
 		}
 	}
 	return res
@@ -61,7 +53,6 @@ func parseInputToBlocks(i string) [][]int {
 
 func main() {
 	fileBlocks := parseInputToBlocks(input)
-	fmt.Println(fileBlocks)
 	fmt.Println("Part 1: ", partOne(fileBlocks))
 	fmt.Println("Part 2: ", partTwo())
 }
